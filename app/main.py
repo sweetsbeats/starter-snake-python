@@ -88,12 +88,16 @@ def move():
         elif direction == 'down':
             appliedDir = y+1
             
-        if appliedDir >= 0 and appliedDir < 15 and not -appliedDir:
+        if appliedDir >= 0 and appliedDir < 15:
             print("Move "+direction+" to: "+str(appliedDir))
             break
         
         direction = random.choice(directions)
     state[uuid] = direction
+    
+
+
+
     return move_response(direction)
 
 

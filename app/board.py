@@ -24,3 +24,20 @@ class State:
         self.board_food = list()
         self.board_food_count = len(self.board_food)
         
+
+
+# An occupied space is considered all snake bodies on the map, including your own
+class OccupiedSpace:
+    def __init__(self, state, x, y):
+        self.x = x
+        self.y = y
+        self.turns_to_empty = distance_between(x, y, state.x, state.y)
+
+
+# Returns a tuple containing the rise over run
+# adding these two values together will get you the total distance between
+def distance_between(x1, y1, x2, y2):
+    x = abs(x2-x1)
+    y = abs(y2-y1)
+    return x+y
+    
