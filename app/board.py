@@ -15,14 +15,28 @@ class State:
         board = data['board']
         self.board_width = int(board['width'])
         self.board_height = int(board['height'])
+        self.board_food = list() #board['food']
+        
         self.occupancy = list()
         
-        for x in range(0, self.board_width):
+        for x in range(0, self.board_width):                
             column = [0]*self.board_height
             self.occupancy.append(column)
 
-        self.board_food = list()
-        self.board_food_count = len(self.board_food)
+
+        snakes = board['snakes']
+
+        for s in snakes:
+            b = s['body']
+            for node in b:
+                occupancy[int(b['x'])][int(b['y'])] = OccupiedSpace(self, int(b['x']), int(b['y']))
+            
+              
+
+        
+    @classmethod
+    def board_food_count():
+        return len(self.board_food)
         
 
 

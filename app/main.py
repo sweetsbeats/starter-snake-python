@@ -6,6 +6,8 @@ import bottle
 from api import ping_response, start_response, move_response, end_response
 
 
+import board
+
 state = dict()
 
 
@@ -61,11 +63,11 @@ def move():
     """
     print(json.dumps(data))
 
-    '''s = data['board']['snakes']
+    """ s = data['board']['snakes']
     s_count = len(s)
     for snake in s:
         snakes[snake['id']] = snake
-'''
+    """
 
     directions = ['up', 'down', 'left', 'right']
     body = data['you']['body']
@@ -92,14 +94,11 @@ def move():
             print("Move "+direction+" to: "+str(appliedDir))
             break
         
-        direction = random.choice(directions)
+    direction = random.choice(directions)
     state[uuid] = direction
-    
-
-
 
     return move_response(direction)
-
+    
 
 @bottle.post('/end')
 def end():
