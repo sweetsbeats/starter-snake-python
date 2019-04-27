@@ -1,3 +1,5 @@
+import random
+
 class State:
     def __init__(self, data):
         #general game data
@@ -26,12 +28,17 @@ class State:
 
         snakes = board['snakes']
 
+        for node in body:
+            x = int(node['x'])
+            y = int(node['y'])
+            self.occupancy[x][y] = OccupiedSpace(self, x, y)
+        
         for s in snakes:
             b = s['body']
             for node in b:
-                occupancy[int(b['x'])][int(b['y'])] = OccupiedSpace(self, int(b['x']), int(b['y']))
-            
-              
+                x = int(node['x'])
+                y = int(node['y'])
+                self.occupancy[x][y] = OccupiedSpace(self, x, y)
 
         
     @classmethod
@@ -54,4 +61,31 @@ def distance_between(x1, y1, x2, y2):
     x = abs(x2-x1)
     y = abs(y2-y1)
     return x+y
+    
+def find_free_space(state):
+    directions = ['up', 'down', 'left', 'right']
+    direction = directions[0]
+    safe_space = False
+
+    while not safe_space:
+        direction = random.choice(directions)
+        dx = state.x
+        dy = state.y
+        
+        if direction== 'left':
+            dx = dx-1
+        elif direction == 'right':
+            dx = dx+1
+        elif direction == 'up':
+            dy = dy-1
+        elif direction == 'down':
+            dy = dy+1
+            
+        if dx > 0 and dx < 15:
+            if dy > 0 and dy < 15:    
+                if not state.occupancy[dx][dy]:
+                    safe_space = True
+            
+    return direction
+
     

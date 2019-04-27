@@ -8,7 +8,7 @@ from api import ping_response, start_response, move_response, end_response
 
 import board
 
-state = dict()
+snake_state = None
 
 
 @bottle.route('/')
@@ -46,8 +46,8 @@ def start():
             request's data if necessary.
     """
     print(json.dumps(data))
-    global state
-    state[data['you']['id']] = "right"
+    global snake_state
+    snake_state = board.State(data)
     
     color = "#00FF00"
 
@@ -69,33 +69,16 @@ def move():
         snakes[snake['id']] = snake
     """
 
-    directions = ['up', 'down', 'left', 'right']
     body = data['you']['body']
     x = int(body[0]['x'])
     y = int(body[0]['y'])
     uuid = data['you']['id']
-    
-    global state
-    direction = state[uuid]
-    
-    for i in range(1,100):
-        appliedDir = 0
-        
-        if direction== 'left':
-            appliedDir = x-1
-        elif direction == 'right':
-            appliedDir = x+1
-        elif direction == 'up':
-            appliedDir = y-1
-        elif direction == 'down':
-            appliedDir = y+1
-            
-        if appliedDir >= 0 and appliedDir < 15:
-            print("Move "+direction+" to: "+str(appliedDir))
-            break
-        
-    direction = random.choice(directions)
-    state[uuid] = direction
+
+
+    snake_state = board.State(data)
+
+
+    direction = board.find_free_space(snake_state)
 
     return move_response(direction)
     
