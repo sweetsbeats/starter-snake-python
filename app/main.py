@@ -5,18 +5,18 @@ import bottle
 
 from api import ping_response, start_response, move_response, end_response
 
+
+import board
+
+snake_state = None
+
+
 @bottle.route('/')
 def index():
-    return """
-    <h1>Starter Snake Python</h1>
-    <main>
-        <h2>Your snake is online!</h2>
-        <p>
-        Battlesnake documentation can be found at
-        <a href="https://github.com/battlesnakeio/docs">https://github.com/battlesnakeio/docs</a>.
-        </p>
-    </main>
-    """
+    return '''
+    Battlesnake documentation can be found at
+       <a href="https://docs.battlesnake.io">https://docs.battlesnake.io</a>.
+    '''
 
 @bottle.route('/static/<path:path>')
 def static(path):
@@ -46,11 +46,12 @@ def start():
             request's data if necessary.
     """
     print(json.dumps(data))
-
+    global snake_state
+    snake_state = board.State(data)
+    
     color = "#00FF00"
 
     return start_response(color)
-
 
 @bottle.post('/move')
 def move():
@@ -62,11 +63,25 @@ def move():
     """
     print(json.dumps(data))
 
-    directions = ['up', 'down', 'left', 'right']
-    direction = random.choice(directions)
+    """ s = data['board']['snakes']
+    s_count = len(s)
+    for snake in s:
+        snakes[snake['id']] = snake
+    """
+
+    body = data['you']['body']
+    x = int(body[0]['x'])
+    y = int(body[0]['y'])
+    uuid = data['you']['id']
+
+
+    snake_state = board.State(data)
+
+
+    direction = board.find_free_space(snake_state)
 
     return move_response(direction)
-
+    
 
 @bottle.post('/end')
 def end():
