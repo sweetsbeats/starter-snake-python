@@ -20,11 +20,15 @@ class State:
         self.board_food = board['food']
         
         self.occupancy = list()
+        self.territory = list()
         
         for x in range(0, self.board_width):                
             column = [0]*self.board_height
             self.occupancy.append(column)
-
+            
+        for x in range(0, self.board_width):               
+            column = [0]*self.board_height
+            self.territory.append(column)
 
         self.snakes = board['snakes']
 
@@ -34,7 +38,7 @@ class State:
             time = len(body) - i
             self.occupancy[x][y] = time
         
-        for s in snakes:
+        for s in self.snakes:
             b = s['body']
             for i, node in enumerate(b):
                 x = int(node['x'])
@@ -42,6 +46,21 @@ class State:
                 time = len(b)-i
                 self.occupancy[x][y] = time
 
+		for x, row in enumerate(self.territory):
+			for y, column in enumerate(x):
+				
+				#check you first
+				you_dist = distance_between(you['body'][0]['x'], you['body'][0]['y'], x, y)
+				snake_dist = distance_between(self.snakes[0]['body'][0]['x'], self.snakes[0]['body'][0]['y'], x, y)
+				for s in self.snakes:
+					test_dist = distance_between(s['body'][0]['x'], s['body'][0]['y'], x, y)
+					if test_dist < snake_dist:
+						snake_dist = test_dist
+				if you_dist < snake_dist:
+					self.territory[x][y] = 0
+				else:
+					self.territory[x][y] = 1
+			
         
     @classmethod
     def board_food_count():
@@ -104,8 +123,7 @@ def find_nearest_food(state):
 def find_best_move(turns, state):
     no_snakes = 1+ len(state.snakes)
 
-    
-
+	
 
 
 
