@@ -1,4 +1,5 @@
 import random
+import numpy as np
 
 class State:
     def __init__(self, data):
@@ -58,20 +59,19 @@ class State:
                 self.occupancy[x][y] = time
 
 		for x, row in enumerate(self.territory):
-			for y, column in enumerate(x):
+			for y, column in enumerate(row):
 				
 				#check you first
-				you_dist = distance_between(you['body'][0]['x'], you['body'][0]['y'], x, y)
-				snake_dist = distance_between(self.snakes[0]['body'][0]['x'], self.snakes[0]['body'][0]['y'], x, y)
-				for s in self.snakes:
-					test_dist = distance_between(s['body'][0]['x'], s['body'][0]['y'], x, y)
-					if test_dist < snake_dist:
-						snake_dist = test_dist
-				if you_dist < snake_dist:
-					self.territory[x][y] = 0
-				else:
-					self.territory[x][y] = 1
-			
+				you_dist = distance_between(self.x, self.y, x, y)
+				self.territory[x][y] = 0
+				for i, snake_head in enumerate(self.snake_heads):
+					snake_dist = distance_between(snake_head[0], snake_head[1], x, y)
+					if snake_dist < you_dist:
+						self.territory[x][y] = 1
+						break
+
+		print(np.matrix(self.territory))
+		print("\n")
         
     @classmethod
     def board_food_count():
