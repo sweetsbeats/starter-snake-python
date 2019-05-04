@@ -60,7 +60,15 @@ class State:
 
 		for x, row in enumerate(self.territory):
 			for y, column in enumerate(row):
-				
+				snake_dist = 16 #board width
+				for i, snake_head in enumerate(self.snake_heads):
+					if i == 0:
+						continue
+					new_dist = distance_between(snake_head[0], snake_head[1], x, y)
+					if new_dist < snake_dist:
+						snake_dist = new_dist
+				self.territory[x][y] = snake_dist
+		"""
 				#check you first
 				you_dist = distance_between(self.x, self.y, x, y)
 				self.territory[x][y] = 0
@@ -69,7 +77,7 @@ class State:
 					if snake_dist < you_dist:
 						self.territory[x][y] = 1
 						break
-
+		"""
 		print(np.matrix(self.territory))
 		print("\n")
         
