@@ -23,7 +23,7 @@ class State:
             x = int(f['x'])
             y = int(f['y'])
             self.board_food.append((x, y))
-        
+            
         self.occupancy = list()
         
         for x in range(0, self.board_width):                
@@ -95,15 +95,64 @@ def find_free_space(state):
             dy = dy-1
         elif direction == 'down':
             dy = dy+1
-            
-        if dx > 0 and dx < 15:
-            if dy > 0 and dy < 15:    
-                if state.occupancy[dx][dy] == 0:
-                    safe_space = True
-            
+
+        
+        if state.health < 20:
+            print 'want food'
+            move_to_food(dx, dy, state)
+        else:
+            if dx >= 0 and dx < 11:
+                if dy >= 0 and dy < 11:    
+                    if state.occupancy[dx][dy] == 0:
+                        if is_safe(dx, dy, state):
+                            safe_space = True
+
     return direction
 
 
+def move_to_food(dx, dy, state):
+    safe_space = False
+    while not safe_space:
+        if dx >= 0 and dx < 11:
+            if dy >= 0 and dy < 11:    
+                if state.occupancy[dx][dy] == 0:
+                    if is_safe(dx, dy, state):
+                        if towards_food((state.x, state.y), (dx, dy), closest_food(state)):
+                            safe_space = True
+    return safe_space
+
+def is_safe(dx, dy, state):
+    for head in state.snake_heads:
+        if dx == head[0] and dy == head[1]:
+            return False
+        else:
+            return True
+        
+
+def closest_food(state):
+    closest = state.board_width
+    for food in state.board_food:
+        if distance_between(state.x, state.y, food[0], food[1]) < closest:
+            closest = distance_between(state.x, state.y, food[0], food[1])
+            ret = food
+    print(type(closest))
+    return ret
+
+        
+def towards_food(position, new_position, food_pos):
+    if (distance_between(new_position[0], new_position[1], food_pos[0], food_pos[1])
+        < distance_between(position[0], position[1], food_pos[0], food_pos[1])):
+        return True
+    else:
+        return False
+    
+        
+
+
+#def occupied_neighbours(space, state):
+#    if space[0]+1
+
+    
 # for one turn, where S is snake count
 # N = S*3
 # no.permutations = !N
