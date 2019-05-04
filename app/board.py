@@ -1,4 +1,5 @@
 import random
+import numpy as np
 
 class State:
     def __init__(self, data):
@@ -25,11 +26,15 @@ class State:
             self.board_food.append((x, y))
             
         self.occupancy = list()
+        self.territory = list()
         
         for x in range(0, self.board_width):                
             column = [0]*self.board_height
             self.occupancy.append(column)
-
+            
+        for x in range(0, self.board_width):               
+            column = [0]*self.board_height
+            self.territory.append(column)
 
         self.snakes = board['snakes']
         self.snake_heads = list()
@@ -53,6 +58,28 @@ class State:
                 time = len(b)-i
                 self.occupancy[x][y] = time
 
+		for x, row in enumerate(self.territory):
+			for y, column in enumerate(row):
+				snake_dist = 16 #board width
+				for i, snake_head in enumerate(self.snake_heads):
+					if i == 0:
+						continue
+					new_dist = distance_between(snake_head[0], snake_head[1], x, y)
+					if new_dist < snake_dist:
+						snake_dist = new_dist
+				self.territory[x][y] = snake_dist
+		"""
+				#check you first
+				you_dist = distance_between(self.x, self.y, x, y)
+				self.territory[x][y] = 0
+				for i, snake_head in enumerate(self.snake_heads):
+					snake_dist = distance_between(snake_head[0], snake_head[1], x, y)
+					if snake_dist < you_dist:
+						self.territory[x][y] = 1
+						break
+		"""
+		print(np.matrix(self.territory))
+		print("\n")
         
     @classmethod
     def board_food_count():
@@ -169,8 +196,7 @@ def towards_food(position, new_position, food_pos):
 #def find_best_move(turns, state):
 #    no_snakes = 1+ len(state.snakes)
 
-    
-
+	
 
 
 
