@@ -17,7 +17,12 @@ class State:
         board = data['board']
         self.board_width = int(board['width'])
         self.board_height = int(board['height'])
-        self.board_food = board['food']
+
+        self.board_food = list()
+        for i, f in enumerate(board['food']): 
+            x = int(f['x'])
+            y = int(f['y'])
+            self.board_food.append((x, y))
         
         self.occupancy = list()
         self.territory = list()
@@ -31,7 +36,13 @@ class State:
             self.territory.append(column)
 
         self.snakes = board['snakes']
-
+        self.snake_heads = list()
+        
+        for s in self.snakes:
+            x = int(s['body'][0]['x'])
+            y = int(s['body'][0]['y'])
+            self.snake_heads.append((x, y))
+            
         for i, node in enumerate(body):
             x = int(node['x'])
             y = int(node['y'])
@@ -69,12 +80,14 @@ class State:
 
 
 # An occupied space is considered all snake bodies on the map, including your own
+
+#NOTE: DO NOT USE THIS
 class OccupiedSpace:
     def __init__(self, state, x, y):
         self.x = x
         self.y = y
         self.turns_to_empty = 0
-
+########
 
 # Returns a tuple containing the rise over run
 # adding these two values together will get you the total distance between
@@ -114,14 +127,17 @@ def find_free_space(state):
 # N = S*3
 # no.permutations = !N
 
-def find_nearest_food(state):
-    for food in state.board_food:
-        for snake in state.snakes:
-            length = distance_between()
+#def find_nearest_food(state):
+#    for food in state.board_food:
+#        for snake in state.snakes:
+#            body = snake['body']
+#            x = body['x']
+#            x = body['y']
+#            length = distance_between()
         
 
-def find_best_move(turns, state):
-    no_snakes = 1+ len(state.snakes)
+#def find_best_move(turns, state):
+#    no_snakes = 1+ len(state.snakes)
 
 	
 
