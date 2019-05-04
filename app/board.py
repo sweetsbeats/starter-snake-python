@@ -17,7 +17,7 @@ class State:
         board = data['board']
         self.board_width = int(board['width'])
         self.board_height = int(board['height'])
-        self.board_food = list() #board['food']
+        self.board_food = board['food']
         
         self.occupancy = list()
         
@@ -26,19 +26,21 @@ class State:
             self.occupancy.append(column)
 
 
-        snakes = board['snakes']
+        self.snakes = board['snakes']
 
-        for node in body:
+        for i, node in enumerate(body):
             x = int(node['x'])
             y = int(node['y'])
-            self.occupancy[x][y] = OccupiedSpace(self, x, y)
+            time = len(body) - i
+            self.occupancy[x][y] = time
         
         for s in snakes:
             b = s['body']
-            for node in b:
+            for i, node in enumerate(b):
                 x = int(node['x'])
                 y = int(node['y'])
-                self.occupancy[x][y] = OccupiedSpace(self, x, y)
+                time = len(b)-i
+                self.occupancy[x][y] = time
 
         
     @classmethod
@@ -52,7 +54,7 @@ class OccupiedSpace:
     def __init__(self, state, x, y):
         self.x = x
         self.y = y
-        self.turns_to_empty = distance_between(x, y, state.x, state.y)
+        self.turns_to_empty = 0
 
 
 # Returns a tuple containing the rise over run
@@ -83,9 +85,31 @@ def find_free_space(state):
             
         if dx > 0 and dx < 15:
             if dy > 0 and dy < 15:    
-                if not state.occupancy[dx][dy]:
+                if state.occupancy[dx][dy] == 0:
                     safe_space = True
             
     return direction
+
+
+# for one turn, where S is snake count
+# N = S*3
+# no.permutations = !N
+
+def find_nearest_food(state):
+    for food in state.board_food:
+        for snake in state.snakes:
+            length = distance_between()
+        
+
+def find_best_move(turns, state):
+    no_snakes = 1+ len(state.snakes)
+
+    
+
+
+
+
+
+
 
     

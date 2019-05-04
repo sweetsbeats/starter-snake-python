@@ -8,7 +8,7 @@ from api import ping_response, start_response, move_response, end_response
 
 import board
 
-snake_state = None
+#snake_state = None
 
 
 @bottle.route('/')
@@ -46,8 +46,8 @@ def start():
             request's data if necessary.
     """
     print(json.dumps(data))
-    global snake_state
-    snake_state = board.State(data)
+    #global snake_state
+    #snake_state = board.State(data)
     
     color = "#00FF00"
 
@@ -80,6 +80,10 @@ def move():
 
     direction = board.find_free_space(snake_state)
 
+
+
+
+    
     return move_response(direction)
     
 
