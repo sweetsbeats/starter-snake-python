@@ -106,7 +106,11 @@ def find_free_space(state):
     direction = directions[0]
     safe_space = False
 
+    tries = 0
     while not safe_space:
+        tries += 1
+        if tries > 100:
+            safe_space = True
         direction = random.choice(directions)
         dx = state.x
         dy = state.y

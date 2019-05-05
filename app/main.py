@@ -77,9 +77,10 @@ def move():
 
     snake_state = board.State(data)
 
-
-    direction = board.find_free_space(snake_state)
-
+    try:
+        direction = board.find_free_space(snake_state)
+    except Exception:
+        direction = 'down'
 
 
 
