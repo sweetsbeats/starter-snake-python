@@ -176,26 +176,21 @@ def towards_food(position, new_position, food_pos):
 def occupied_neighbours(space, state):
     side = 0
     for node in state.occupancy:
-        # Checks walls
-        if space[0]+1 > state.board_width or space[0]-1 < 0:
-            side= side+1
-        if space[1]+1 > state.board_height or space[1]-1 < 0:
-            side= side+1
+        if space[0] >= 0 and space[0] < state.board_width:
+            if space[1] >= 0 and space[1] < state.board_height:
+                if state.occupancy[space[0]][space[1]] != 0:
+                    side = side+1
 
-        if space[0] > 0:  
-            if state.occupancy[space[0]-1] != 0:
-                side= side+1
-        if space[0] < state.board_width-1:
-            if state.occupancy[space[0]+1] != 0:
-                side= side+1
-        if space[1] > 0:
-            if state.occupancy[space[1]-1] != 0:
-                side= side+1
-        if space[1] < state.board_height-1:
-            # Checks snake bodies only
-            if state.occupancy[space[1]+1] != 0:
-                side= side +1
-                
+    if space[0]-1 < 0:
+        side = side+1
+    if space[0] >= state.board_width:
+        side = side+1
+    if space[1]-1 < 0:
+        side = side+1
+    if space[1] >= state.board_height:
+        side = side+1
+        
+    assert(side <= 4)    
     return side
 
     
