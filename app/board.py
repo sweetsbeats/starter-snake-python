@@ -129,7 +129,7 @@ def find_free_space(state):
                 else:
                     if state.occupancy[dx][dy] == 0:
                         if is_safe(dx, dy, state):
-                            #if occupied_neighbours((dx, dy), state) < 2:
+                            if occupied_neighbours((dx, dy), state) < 3:
                                 safe_space = True
 
     return direction
@@ -143,7 +143,8 @@ def move_to_food(dx, dy, state):
                 if state.occupancy[dx][dy] == 0:
                     if is_safe(dx, dy, state):
                         if towards_food((state.x, state.y), (dx, dy), closest_food(state)):
-                            safe_space = True
+                            if occupied_neighbours((dx, dy), state) < 3:
+                                safe_space = True
     return safe_space
 
 def is_safe(dx, dy, state):
@@ -176,8 +177,8 @@ def towards_food(position, new_position, food_pos):
 def occupied_neighbours(space, state):
     side = 0
     for node in state.occupancy:
-        if space[0] >= 0 and space[0] < state.board_width:
-            if space[1] >= 0 and space[1] < state.board_height:
+        if space[0] > 0 and space[0] < state.board_width:
+            if space[1] > 0 and space[1] < state.board_height:
                 if state.occupancy[space[0]][space[1]] != 0:
                     side = side+1
 
