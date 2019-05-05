@@ -1,5 +1,4 @@
 import random
-import numpy as np
 
 class State:
     def __init__(self, data):
