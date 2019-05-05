@@ -78,8 +78,6 @@ class State:
 						self.territory[x][y] = 1
 						break
 		"""
-		print(np.matrix(self.territory))
-		print("\n")
         
     @classmethod
     def board_food_count():
@@ -123,16 +121,16 @@ def find_free_space(state):
         elif direction == 'down':
             dy = dy+1
 
-        
-        if state.health < 20:
-            print 'want food'
-            move_to_food(dx, dy, state)
-        else:
-            if dx >= 0 and dx < 11:
-                if dy >= 0 and dy < 11:    
+        if dx > 0 and dx < 11:
+            if dy > 0 and dy < 11:    
+                if state.health < 20:
+                    print 'want food'
+                    move_to_food(dx, dy, state)
+                else:
                     if state.occupancy[dx][dy] == 0:
                         if is_safe(dx, dy, state):
-                            safe_space = True
+                            #if occupied_neighbours((dx, dy), state) < 2:
+                                safe_space = True
 
     return direction
 
@@ -150,19 +148,20 @@ def move_to_food(dx, dy, state):
 
 def is_safe(dx, dy, state):
     for head in state.snake_heads:
-        if dx == head[0] and dy == head[1]:
-            return False
+        if (dx, dy) != head:
+            if dx == head[0] and dy == head[1]:
+                return False
+            else:
+                return True
         else:
-            return True
-        
-
+            False
+            
 def closest_food(state):
     closest = state.board_width
     for food in state.board_food:
         if distance_between(state.x, state.y, food[0], food[1]) < closest:
             closest = distance_between(state.x, state.y, food[0], food[1])
             ret = food
-    print(type(closest))
     return ret
 
         
@@ -174,10 +173,30 @@ def towards_food(position, new_position, food_pos):
         return False
     
         
+def occupied_neighbours(space, state):
+    side = 0
+    for node in state.occupancy:
+        # Checks walls
+        if space[0]+1 > state.board_width or space[0]-1 < 0:
+            side= side+1
+        if space[1]+1 > state.board_height or space[1]-1 < 0:
+            side= side+1
 
-
-#def occupied_neighbours(space, state):
-#    if space[0]+1
+        if space[0] > 0:  
+            if state.occupancy[space[0]-1] != 0:
+                side= side+1
+        if space[0] < state.board_width-1:
+            if state.occupancy[space[0]+1] != 0:
+                side= side+1
+        if space[1] > 0:
+            if state.occupancy[space[1]-1] != 0:
+                side= side+1
+        if space[1] < state.board_height-1:
+            # Checks snake bodies only
+            if state.occupancy[space[1]+1] != 0:
+                side= side +1
+                
+    return side
 
     
 # for one turn, where S is snake count
@@ -197,10 +216,3 @@ def towards_food(position, new_position, food_pos):
 #    no_snakes = 1+ len(state.snakes)
 
 	
-
-
-
-
-
-
-    
